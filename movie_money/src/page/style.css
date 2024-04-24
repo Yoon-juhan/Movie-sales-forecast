@@ -1,7 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Nanum+Gothic&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anta&display=swap&family=Nanum+Gothic&display=swap");
 
 body {
-    background-color:rgba(0, 0, 0, 0.894);
+    /* background-color:rgba(0, 0, 0, 0.894); */
+    background-image: url(background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
 }
 
 .navbar {
@@ -9,7 +14,7 @@ body {
 }
 
 .nav_logo {
-    font-family: 'Dancing Script', cursive;
+    font-family: "Anta", sans-serif;
     color: rgb(226, 0, 0);
     font-size: 30px;
     margin-left: 20px;
@@ -23,18 +28,18 @@ body {
 }
 
 .login_logo {
-    font-family: 'Dancing Script', cursive;
+    font-family: "Anta", sans-serif;
     color: rgb(226, 0, 0);
     margin-top: 50px;
     margin-bottom: 100px;
-    font-size: 60px;
+    font-size: 50px;
 }
 
 .login_box {
     color: white;
     padding: 20px;
     border-radius: 10px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.7);
     justify-content: center;
     align-items: center;
 }
