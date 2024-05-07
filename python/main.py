@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import Any
+from dto import *
+from database import userJoin, userLogin
 
 # uvicorn main:app --reload
 app = FastAPI()
@@ -15,14 +15,33 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-class LoginRequest(BaseModel):
-    id:Any
-    pw:Any
 
 @app.post("/login")
 async def login(item:LoginRequest):
 
-    return {
-        "id" : item.id,
-        "status" : "ok"
+    user = userLogin(item.id, item.pw)
+
+    if not user.empty:
+        return {
+            "id" : user.MEMBER_ID[0],
+            "nickname" : user.NICKNAME[0],
+            "status" : True
         }
+    else:
+        return {
+            "status" : False
+        }
+
+@app.post("/join")
+async def join(item:JoinRequest):
+    try:
+        userJoin(item.id, item.pw, item.nickname)
+        return {
+        "status" : True,
+        "nickname": item.nickname
+        }
+    except:
+        return {
+            "status" : False
+        }
+    

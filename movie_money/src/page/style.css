@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Anta&display=swap&family=Nanum+Gothic&display=swap");
 
 body {
-    /* background-color:rgba(0, 0, 0, 0.894); */
-    background-image: url(background.jpg);
+    background-color:rgba(0, 0, 0, 0.894);
+    /* background-image: url(background.jpg); */
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -25,6 +25,14 @@ body {
     justify-content: center;
     align-items: center;
     font-family: "Nanum Gothic", sans-serif;
+}
+
+.Home-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Nanum Gothic", sans-serif;
+    height: 90vh;
 }
 
 .login_logo {
@@ -62,4 +70,20 @@ input {
 
 .login_btn:hover {
     cursor: pointer;
+}
+
+.predict_btn {
+    font-family: "Nanum Gothic", sans-serif;
+    width: 100%;
+    color: white;
+    background-color:  rgb(226, 0, 0);
+}
+
+.Home-header td {
+    padding: 5px;
+}
+
+.Home-header input {
+    margin: 10px;
+    width: 100%;
 }

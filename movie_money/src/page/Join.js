@@ -2,23 +2,22 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function Login() {
+function Join() {
     let navi = useNavigate()
     let [id, setId] = useState("")
     let [pw, setPw] = useState("")
+    let [nickname, setNickname] = useState("")
 
-    async function goHome() {
-        let url = `${process.env.REACT_APP_SERVER_URL}/login`;
+    async function Join() {
+        let url = `${process.env.REACT_APP_SERVER_URL}/join`;
 
-        await axios.post(url, {id:id, pw:pw})
+        await axios.post(url, {id:id, pw:pw, nickname:nickname})
             .then((res) => {
                 if (res.data.status) {
-                    sessionStorage.setItem("id", res.data.id)
-                    console.log(res)
-                    navi("/home")
+                    alert("가입 성공! 로그인 해주세요")
+                    navi("/")
                 } else {
-                    alert("없는 회원입니다.")
-                    console.log(res)
+                    alert("가입 실패!")
                 }
             })
     }
@@ -27,17 +26,19 @@ function Login() {
 
         <div className="Login">
 
-            <header className="Login-header">
+            <header className="Join-header">
                 <h1 align="center" className="login_logo">Movie Money</h1>
-                <h1 align="center" style={{ color: "white" }}>로그인</h1>
+                <h1 align="center" style={{ color: "white" }}>회원가입</h1>
 
                 <div className="login_box">
                     <p>아이디</p>
                     <p><input type="text" onChange={e => setId(e.target.value)}/></p>
                     <p>비밀번호</p>
                     <p><input type="password" onChange={e => setPw(e.target.value)}/></p>
-                    <p><input className="login_btn" type="button" value="로그인" onClick={goHome}/></p>
-                    <p><input className="login_btn" type="button" value="회원가입" onClick={()=>navi("/join")}/></p>
+                    <p>닉네임</p>
+                    <p><input type="text" onChange={e => setNickname(e.target.value)}/></p>
+                    <p><input className="login_btn" type="button" value="로그인" onClick={()=>navi("/")}/></p>
+                    <p><input className="login_btn" type="button" value="회원가입" onClick={Join}/></p>
                     
                 </div>
 
@@ -47,4 +48,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Join;

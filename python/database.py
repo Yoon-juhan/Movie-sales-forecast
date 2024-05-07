@@ -10,18 +10,34 @@ id = "yoon"
 pw = "yoon"
 url = "localhost:1521/xe"
 
-# 기사 삽입
-def insert(summary_news):
+
+def userLogin(user_id, user_pw):
     conn = cx.connect(id, pw, url)
 
-    now = datetime.datetime.now()
-    now = str(now.year) + str(now.month).zfill(2) + str(now.day).zfill(2) + str(now.hour).zfill(2)
+    sql = f"""select * from member
+              where member_id = {user_id} and member_pw = {user_pw}
+            """
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+    
+    df = pd.read_sql(sql, con = conn)
 
-    sql = f"""insert into news(news_id, cate_id, title, content, imgs, url, keyword, views)
-              values({now} || news_seq.nextval, :1, :2, :3, :4, :5, :6, 0)"""
+    cur.close()
+    conn.close()
+    print(df)
+    return df
+
+
+# 회원 가입
+def userJoin(user_id, user_pw, nickname):
+    conn = cx.connect(id, pw, url)
+
+    sql = f"""insert into member(member_id, member_pw, nickname)
+              values({user_id}, {user_pw}, {nickname})"""
 
     cur = conn.cursor()
-    cur.executemany(sql, summary_news.values.tolist())
+    cur.execute(sql)
     
     print("INSERT 성공")
 
