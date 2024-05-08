@@ -7,7 +7,6 @@ import Boxoffice from "./page/Boxoffice"
 import MyPage from "./page/MyPage"
 import { Routes, Route } from "react-router-dom";
 
-
 function App() {
   return (
 

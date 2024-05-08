@@ -81,9 +81,39 @@ input {
 
 .Home-header td {
     padding: 5px;
+    font-size: 20px;
 }
 
 .Home-header input {
     margin: 10px;
     width: 100%;
+}
+
+.dropdownStyle {
+    background-color: white;
+    color: black;
+    font-size: 15px;
+}
+
+.dropdownStyle:hover {
+    background-color: rgb(226, 0, 0);
+}
+
+.buttonStyle {
+    border: none;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+}
+
+.buttonStyle:hover {
+    background-color: rgb(226, 0, 0);
+}
+
+.dropdownReset {
+    color: rgb(226, 0, 0);
+}
+
+.modalInput {
+    border: 2px solid;
 }

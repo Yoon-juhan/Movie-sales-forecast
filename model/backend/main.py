@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dto import *
-from database import userJoin, userLogin
+from database import *
 
 # uvicorn main:app --reload
 app = FastAPI()
@@ -44,4 +44,15 @@ async def join(item:JoinRequest):
         return {
             "status" : False
         }
+
+@app.get("/get/{name}")
+async def getData(name: str):
     
+    if name == "actors":
+        data = selectActors()
+    elif name == "directors":
+        data = selectDirectors()
+    else:
+        data = selectDistributors()
+
+    return {"data":data}
