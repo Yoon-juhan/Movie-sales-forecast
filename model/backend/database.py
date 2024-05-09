@@ -44,6 +44,23 @@ def userJoin(user_id, user_pw, nickname):
     conn.commit()
     conn.close()
 
+# 박스오피스 데이터 insert
+def insertBoxoffice(boxoffice):
+    conn = cx.connect(id, pw, url)
+    # ['순위', '영화명', '개봉일', '점유율', '누적매출액', '누적관객수', '스크린수', '상영횟수', '대표국적', '제작사', '배급사', '등급', '장르', '감독', '배우']
+    sql = f"""insert into boxoffice_data(movie_id, movie_rank, movie_name, open_date, market_share, sales, audience, screen, screening, nationality, manufacturer, distributor, rating, genre, director, actor)
+              values(boxoffice_sequence.nextval, :1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11, :12, :13, :14, :15)"""
+    
+    print(sql)
+    cur = conn.cursor()
+    cur.executemany(sql, boxoffice.values.tolist())
+    
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return
+
 # 배우 이름 insert
 def insertActors(actors):
     conn = cx.connect(id, pw, url)
@@ -61,7 +78,7 @@ def insertActors(actors):
     return
 
 # 감독 이름 insert
-def insertDirector(directors):
+def insertDirectors(directors):
     conn = cx.connect(id, pw, url)
 
     sql = f"""insert into directors(name)
@@ -102,11 +119,11 @@ def selectActors():
     cur.execute(sql)
 
     df = pd.read_sql(sql, con = conn)
-   
-    cur.close()
-    conn.close()
     data = df.values.tolist()
     flatten_data = [item for sublist in data for item in sublist]
+
+    cur.close()
+    conn.close()
 
     return flatten_data
 
@@ -120,11 +137,14 @@ def selectDirectors():
     cur = conn.cursor()
     cur.execute(sql)
 
+    df = pd.read_sql(sql, con = conn)
+    data = df.values.tolist()
+    flatten_data = [item for sublist in data for item in sublist]
+
     cur.close()
-    conn.commit()
     conn.close()
 
-    return
+    return flatten_data
 
 # 배급사 이름 select
 def selectDistributors():
@@ -135,8 +155,11 @@ def selectDistributors():
     cur = conn.cursor()
     cur.execute(sql)
 
+    df = pd.read_sql(sql, con = conn)
+    data = df.values.tolist()
+    flatten_data = [item for sublist in data for item in sublist]
+
     cur.close()
-    conn.commit()
     conn.close()
 
-    return
+    return flatten_data

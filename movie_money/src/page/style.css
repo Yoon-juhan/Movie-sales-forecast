@@ -99,6 +99,11 @@ input {
     background-color: rgb(226, 0, 0);
 }
 
+.dropdownScroll {
+    height: 30vh;
+    overflow-y:scroll;
+}
+
 .buttonStyle {
     border: none;
     background-color: white;
@@ -116,4 +121,20 @@ input {
 
 .modalInput {
     border: 2px solid;
+}
+
+.modalBtn {
+    padding: 5px;
+}
+
+.modalResetBtn {
+    margin-left: 5px;
+    background-color: rgb(226, 0, 0);
+}
+
+.selectActorBtn {
+    margin: 5px;
+    border: none;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
 }
