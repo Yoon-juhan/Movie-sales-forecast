@@ -6,12 +6,14 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+import Swal from 'sweetalert2'
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Home() {
-
+    
     let navi = useNavigate()
    // useEffect(() => {
     //     const id = sessionStorage.getItem("id");
@@ -19,7 +21,7 @@ function Home() {
     //         setId(id);
     //     }
     // }, []);
-
+    
     let [movie_name, setMovieName] = useState("")
     let [open_date, setOpenDate] = useState("")
     let [nationality, setNationality] = useState("")
@@ -54,7 +56,7 @@ function Home() {
         if (actor.length < 3 && !actor.includes(selectedActor)) {
             setActor([...actor, selectedActor]);
         } else {
-            alert("최대 3명의 배우만 선택할 수 있습니다.");
+            Swal.fire("최대 3명의 중복되지 않는 배우만 선택할 수 있습니다.", "", "error")
         }
     };
 
@@ -140,7 +142,7 @@ function Home() {
         if (genre.length < 3 && !genre.includes(e.target.text)) { // 선택한 장르가 배열에 없는 경우에만 추가
             setGenre([...genre, e.target.text]);                  // 선택한 장르를 배열에 추가
         } else {
-            alert("최대 3개의 장르만 선택할 수 있습니다.");
+            Swal.fire("최대 3개의 중복되지 않는 장르만 선택할 수 있습니다.", "", "error")
         }
     };
     
@@ -171,29 +173,40 @@ function Home() {
     const handleClose3 = () => setShow3(false);
     const handleShow3 = () => setShow3(true);
 
+    async function startPredict() {
+    
+        let url = `${process.env.REACT_APP_SERVER_URL}/predict`;
+        
+        await axios.post(url, {
+            movie_name:movie_name, 
+            open_date:open_date, 
+            nationality:nationality, 
+            genre:genre, 
+            rating:rating, 
+            director:director, 
+            actor:actor, 
+            distributor:distributor, 
+        })
+            .then((res) => {
+                
+                // 2024-05-10 (입력받고 예측 값 찍힘)
+                console.log(res.data.data)
+                // navi("/predict")
+            })
+    }
 
     // 예측 시작 클릭
     const predict = () => {
         
-        // 예측 요청
-
         // 결과 가지고 화면 이동
-        navi("/predict")
-        console.log(movie_name);
-        console.log(open_date);
-        console.log(nationality)
-        console.log(genre);
-        console.log(rating);
-        console.log(actor);
-        console.log(director);
-        console.log(distributor);
-        console.log("-------------------------------------------------");
 
+        if (movie_name && open_date && nationality && genre && rating && director && actor && distributor) {
+            // 예측 요청
+            startPredict()
+            } else {
+                Swal.fire("모두 입력해주세요", "", "error")
+            }
     };
-
-
-
-
 
 
 
@@ -254,7 +267,7 @@ function Home() {
                         
                             </td>
                             <td>
-                                <input type="text" readOnly value={nationality} onChange={e => setNationality(e.target.value)}/>
+                                <input type="text" placeholder='대표 국적 선택' readOnly value={nationality} onChange={e => setNationality(e.target.value)}/>
                             </td>
                         </tr>
                         <tr>
@@ -312,12 +325,12 @@ function Home() {
                                 <input type="text" readOnly placeholder='장르 선택 (최대 3개)' value={genre} onChange={e => setGenre(e.target.value)}/>
                             </td>
                             <td>
-                                <input type="text" readOnly value={rating} onChange={e => setRating(e.target.value)}/>
+                                <input type="text" placeholder='관람 등급 선택' readOnly value={rating} onChange={e => setRating(e.target.value)}/>
                             </td>
                         </tr>
                         <tr>
                             <td>배우 &nbsp;
-                                <Button variant="primary" onClick={getActors} className='modalBtn modalSearchBtn'>
+                                <Button variant="success" onClick={getActors} className='modalBtn modalSearchBtn'>
                                     검색
                                 </Button>
                                 <Button variant="danger" onClick={resetActor} className='modalBtn modalResetBtn'>
@@ -359,7 +372,7 @@ function Home() {
                         <tr>
                             <td>
                                 감독 &nbsp;
-                                <Button variant="primary" onClick={getDirectors} className='modalBtn modalSearchBtn'>
+                                <Button variant="success" onClick={getDirectors} className='modalBtn modalSearchBtn'>
                                     검색
                                 </Button>
                                 <Button variant="danger" onClick={resetDirector} className='modalBtn modalResetBtn'>
@@ -394,7 +407,7 @@ function Home() {
                             </td>
                             
                             <td>배급사 &nbsp;
-                                <Button variant="primary" onClick={getDistributors} className='modalBtn modalSearchBtn'>
+                                <Button variant="success" onClick={getDistributors} className='modalBtn modalSearchBtn'>
                                     검색
                                 </Button>
                                 <Button variant="danger" onClick={resetDistributor} className='modalBtn modalResetBtn'>
@@ -430,10 +443,10 @@ function Home() {
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" value={director} onChange={e => setDirector(e.target.value)} readOnly/>
+                                <input type="text" placeholder='대표 감독 선택' value={director} onChange={e => setDirector(e.target.value)} readOnly/>
                             </td>
                             <td>
-                                <input type="text" value={distributor} onChange={e => setDistributor(e.target.value)} readOnly/>
+                                <input type="text" placeholder='대표 배급사 선택' value={distributor} onChange={e => setDistributor(e.target.value)} readOnly/>
                             </td>
                         </tr>
 

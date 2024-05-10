@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from 'sweetalert2'
 
 function Login() {
     let navi = useNavigate()
@@ -17,7 +18,7 @@ function Login() {
                     console.log(res)
                     navi("/home")
                 } else {
-                    alert("없는 회원입니다.")
+                    Swal.fire("없는 회원입니다.", "", "error")
                     console.log(res)
                 }
             })
