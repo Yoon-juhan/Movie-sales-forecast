@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dto import *
 from database import *
-from predictTest import startPredict
+from predict import startPredict
 
 # uvicorn main:app --reload
 app = FastAPI()
@@ -58,6 +58,7 @@ async def getData(name: str):
 
     return {"data":data}
 
+# 예측 시작
 @app.post("/predict")
 async def predict(item:PredictRequest):
 

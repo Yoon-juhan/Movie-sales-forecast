@@ -15,12 +15,6 @@ import axios from "axios";
 function Home() {
     
     let navi = useNavigate()
-   // useEffect(() => {
-    //     const id = sessionStorage.getItem("id");
-    //     if (id) {
-    //         setId(id);
-    //     }
-    // }, []);
     
     let [movie_name, setMovieName] = useState("")
     let [open_date, setOpenDate] = useState("")
@@ -188,10 +182,16 @@ function Home() {
             distributor:distributor, 
         })
             .then((res) => {
-                
-                // 2024-05-10 (입력받고 예측 값 찍힘)
-                console.log(res.data.data)
-                // navi("/predict")
+                console.log(res.data.data);
+                sessionStorage.setItem("result", res.data.data);
+                sessionStorage.setItem("movie_name", movie_name);
+                sessionStorage.setItem("open_date", open_date);
+                sessionStorage.setItem("nationality", nationality);
+                sessionStorage.setItem("genre", genre);
+                sessionStorage.setItem("director", director);
+                sessionStorage.setItem("actor", actor);
+                sessionStorage.setItem("distributor", distributor);
+                navi("/predict")
             })
     }
 
