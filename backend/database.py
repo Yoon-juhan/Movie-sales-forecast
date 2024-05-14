@@ -14,7 +14,7 @@ def userLogin(user_id, user_pw):
     conn = cx.connect(id, pw, url)
 
     sql = f"""select * from member
-              where member_id = {user_id} and member_pw = {user_pw}
+              where member_id = '{user_id}' and member_pw = '{user_pw}'
             """
     
     cur = conn.cursor()
@@ -33,8 +33,8 @@ def userJoin(user_id, user_pw, nickname):
     conn = cx.connect(id, pw, url)
 
     sql = f"""insert into member(member_id, member_pw, nickname)
-              values({user_id}, {user_pw}, {nickname})"""
-
+              values('{user_id}', '{user_pw}', '{nickname}')"""
+    
     cur = conn.cursor()
     cur.execute(sql)
     
@@ -163,3 +163,34 @@ def selectDistributors():
     conn.close()
 
     return flatten_data
+
+# 예상 매출액과 비슷한 영화 데이터 select (+- 10% 범위)
+def selectSimilarSales(data):
+    conn = cx.connect(id, pw, url)
+
+    a = int(data * 0.9)
+    b = int(data * 1.1)
+
+    sql = f"""SELECT *
+                FROM (
+                    SELECT *
+                    FROM (
+                        SELECT b.*,
+                        ROW_NUMBER() OVER (PARTITION BY movie_name, open_date ORDER BY sales DESC) AS rnk
+                        FROM boxoffice_data b
+                        WHERE sales BETWEEN {a} AND {b}
+                    )
+                WHERE rnk = 1
+                ORDER BY sales DESC         
+                )
+            WHERE ROWNUM <= 5"""
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    df = pd.read_sql(sql, con = conn)
+
+    cur.close()
+    conn.close()
+
+    return df

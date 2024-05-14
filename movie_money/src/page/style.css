@@ -10,6 +10,10 @@ body {
 }
 
 .navbar {
+    margin-bottom: 100px;
+}
+
+.navbarC {
     margin: 0;
 }
 
@@ -32,7 +36,6 @@ body {
     justify-content: center;
     align-items: center;
     font-family: "Nanum Gothic", sans-serif;
-    height: 90vh;
 }
 
 .login_logo {
@@ -137,4 +140,10 @@ input {
     border: none;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.7);
+}
+
+.table td {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 17px;
 }

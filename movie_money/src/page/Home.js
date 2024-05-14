@@ -167,8 +167,8 @@ function Home() {
     const handleClose3 = () => setShow3(false);
     const handleShow3 = () => setShow3(true);
 
+    // 예측 요청
     async function startPredict() {
-    
         let url = `${process.env.REACT_APP_SERVER_URL}/predict`;
         
         await axios.post(url, {
@@ -213,8 +213,8 @@ function Home() {
     return (
 
         <div className="Home">
-            <Navbar bg="dark" data-bs-theme="dark">
-                <Container className="navbar">
+            <Navbar bg="dark" data-bs-theme="dark" className="navbar">
+                <Container className="navbarC">
                     <Navbar.Brand href="/home" className='nav_logo'>Movie Money</Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link href="/home">매출액 예측</Nav.Link>

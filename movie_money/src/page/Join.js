@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from 'sweetalert2'
 
 function Join() {
     let navi = useNavigate()
@@ -10,14 +11,17 @@ function Join() {
 
     async function Join() {
         let url = `${process.env.REACT_APP_SERVER_URL}/join`;
-
+        console.log(nickname);
+        
         await axios.post(url, {id:id, pw:pw, nickname:nickname})
             .then((res) => {
                 if (res.data.status) {
-                    alert("가입 성공! 로그인 해주세요")
+                    console.log(res.data);
+                    Swal.fire("가입 성공! 로그인 해주세요", "", "success")
                     navi("/")
                 } else {
-                    alert("가입 실패!")
+                    console.log(res.data);
+                    Swal.fire("가입 실패!", "", "error")
                 }
             })
     }

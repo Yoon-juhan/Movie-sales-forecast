@@ -6,9 +6,9 @@ class LoginRequest(BaseModel):
     pw:Any
 
 class JoinRequest(BaseModel):
-    id:Any
-    pw:Any
-    nickname:Any
+    id:str
+    pw:str
+    nickname:str
 
 class PredictRequest(BaseModel):
     movie_name:str

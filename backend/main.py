@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from dto import *
 from database import *
@@ -35,6 +35,7 @@ async def login(item:LoginRequest):
 
 @app.post("/join")
 async def join(item:JoinRequest):
+    print(item.nickname)
     try:
         userJoin(item.id, item.pw, item.nickname)
         return {
@@ -65,3 +66,10 @@ async def predict(item:PredictRequest):
     result = startPredict(item)
 
     return {"data":result}
+
+# 예상 매출액과 비슷한 영화 데이터
+@app.get("/similar-sales")
+async def getSimilarSales (result: int = Query(...)):
+    df = selectSimilarSales(result)
+
+    return df.to_dict(orient="records")
