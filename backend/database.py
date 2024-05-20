@@ -194,3 +194,40 @@ def selectSimilarSales(data):
     conn.close()
 
     return df
+
+# 예측 기록 저장
+def insertPredict(user_id, data):
+    conn = cx.connect(id, pw, url)
+
+    now = datetime.datetime.now()
+    now = str(now.year) + str(now.month).zfill(2) + str(now.day).zfill(2) + str(now.hour).zfill(2)
+
+    sql = f"""insert into history(history_id, member_id, movie_name, open_date, nationality, genre, rating, director, actor, distributor, predicted_value)
+              values({now} || history_sequence.nextval, '{user_id}', '{data[0]}', '{data[1]}', '{data[2]}', '{data[3]}', '{data[4]}', '{data[5]}', '{data[6]}', '{data[7]}', {data[8]})"""
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return
+
+# 내 기록 조회
+def selectHistory(user_id):
+    conn = cx.connect(id, pw, url)
+
+    sql = f"""select * from history
+              where member_id = '{user_id}'
+              order by to_number(history_id)"""
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+    
+    df = pd.read_sql(sql, con = conn)
+    print(df)
+    cur.close()
+    conn.close()
+
+    return df

@@ -25,6 +25,7 @@ async def login(item:LoginRequest):
     if not user.empty:
         return {
             "id" : user.MEMBER_ID[0],
+            "pw" : user.MEMBER_PW[0],
             "nickname" : user.NICKNAME[0],
             "status" : True
         }
@@ -71,5 +72,33 @@ async def predict(item:PredictRequest):
 @app.get("/similar-sales")
 async def getSimilarSales (result: int = Query(...)):
     df = selectSimilarSales(result)
+
+    return df.to_dict(orient="records")
+
+# 예측 기록 저장
+@app.get("/savePredict")
+async def savePredict(
+    user_id: str = Query(...),
+    movie_name: str = Query(...),
+    open_date: str = Query(...),
+    nationality: str = Query(...),
+    genre: str = Query(...),
+    rating: str = Query(...),
+    director: str = Query(...),
+    actor: str = Query(...),
+    distributor: str = Query(...),
+    result: int = Query(...)
+):
+
+    insertPredict(user_id, [movie_name, open_date, nationality, genre, rating, director, actor, distributor, result])
+
+    return {
+        "status":True
+    }
+
+# 예측 기록 조회
+@app.get("/getHistory")
+async def getHistory (user_id: str = Query(...)):
+    df = selectHistory(user_id)
 
     return df.to_dict(orient="records")

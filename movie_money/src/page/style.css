@@ -147,3 +147,17 @@ input {
     padding-right: 10px;
     font-size: 17px;
 }
+
+.saveBtn {
+    background-color: rgb(226, 0, 0);
+    border: none;
+    align-items: end;
+}
+
+#myPageInput {
+    width: 200px;
+}
+
+.pagination {
+    align-content: center;
+}

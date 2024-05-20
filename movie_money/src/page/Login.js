@@ -15,6 +15,8 @@ function Login() {
             .then((res) => {
                 if (res.data.status) {
                     sessionStorage.setItem("id", res.data.id)
+                    sessionStorage.setItem("pw", res.data.pw)
+                    sessionStorage.setItem("nickname", res.data.nickname)
                     console.log(res)
                     navi("/home")
                 } else {

@@ -188,6 +188,7 @@ function Home() {
                 sessionStorage.setItem("open_date", open_date);
                 sessionStorage.setItem("nationality", nationality);
                 sessionStorage.setItem("genre", genre);
+                sessionStorage.setItem("rating", rating);
                 sessionStorage.setItem("director", director);
                 sessionStorage.setItem("actor", actor);
                 sessionStorage.setItem("distributor", distributor);

@@ -3,31 +3,55 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-
 import Table from 'react-bootstrap/Table';
 
-function Predict() {
+import Button from 'react-bootstrap/Button';
 
+function Predict() {
+    
+    var user_id = sessionStorage.getItem("id")
     var result = sessionStorage.getItem("result");
     var movie_name = sessionStorage.getItem("movie_name");
     var open_date = sessionStorage.getItem("open_date");
     var nationality = sessionStorage.getItem("nationality");
     var genre = sessionStorage.getItem("genre");
+    var rating = sessionStorage.getItem("rating")
     var director = sessionStorage.getItem("director");
     var actor = sessionStorage.getItem("actor");
     var distributor = sessionStorage.getItem("distributor");
 
     const [similar, setSimilar] = useState([]);
 
+    console.log(result);
+    console.log(movie_name);
+    console.log(open_date);
+    console.log(nationality);
+    console.log(genre);
+    console.log(rating);
+    console.log(director);
+    console.log(actor);
+    console.log(distributor);
+
     // 예측 결과와 비슷한 영화 가져오기
     async function getSimilarSales() {
-        let url = `${process.env.REACT_APP_SERVER_URL}/similar-sales/`
+        let url = `${process.env.REACT_APP_SERVER_URL}/similar-sales`
         await axios.get(url, {
             params : {result}
         })
             .then((res) => {
                 console.log(res.data);
                 setSimilar(res.data);
+            })
+    }
+
+    // 예측 기록 저장
+    async function savePredict() {
+        let url = `${process.env.REACT_APP_SERVER_URL}/savePredict`
+        await axios.get(url, {
+            params : {user_id, movie_name, open_date, nationality, genre, rating, director, actor, distributor, result}
+        })
+            .then((res) => {
+                console.log(res.data);
             })
     }
 
@@ -60,6 +84,7 @@ function Predict() {
                     <h1 align='center'><b>🎬영화 [{movie_name}]의 예상 매출액</b></h1>
                     <h2 align='center'><b>🎉 {formatted_result} 원 🎉</b></h2>
                     <br />
+                    <p align='end'><Button className='saveBtn' onClick={savePredict}><b>저장</b></Button></p>
                     <Table striped bordered hover variant="dark" className='table'>
                         <thead align='center'>
                             <tr>
@@ -67,6 +92,7 @@ function Predict() {
                                 <th>개봉일</th>
                                 <th>국적</th>
                                 <th>장르</th>
+                                <th>등급</th>
                                 <th>감독</th>
                                 <th>배우</th>
                                 <th>배급사</th>
@@ -79,6 +105,7 @@ function Predict() {
                                 <td>{open_date}</td>
                                 <td>{nationality}</td>
                                 <td>{genre}</td>
+                                <td>{rating}</td>
                                 <td>{director}</td>
                                 <td>{actor}</td>
                                 <td>{distributor}</td>
@@ -99,6 +126,7 @@ function Predict() {
                                 <th>개봉일</th>
                                 <th>국적</th>
                                 <th>장르</th>
+                                <th>등급</th>
                                 <th>감독</th>
                                 <th>배우</th>
                                 <th>배급사</th>
@@ -113,6 +141,7 @@ function Predict() {
                                 <td>{movie.OPEN_DATE}</td>
                                 <td>{movie.NATIONALITY}</td>
                                 <td>{movie.GENRE.split(',').slice(0,3).join(',')}</td>
+                                <td>{movie.RATING}</td>
                                 <td>{movie.DIRECTOR}</td>
                                 <td>{movie.ACTOR.split(',').slice(0,3).join(',')}</td>
                                 <td>{movie.DISTRIBUTOR}</td>

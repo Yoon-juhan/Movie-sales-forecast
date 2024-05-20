@@ -94,8 +94,6 @@ def startPredict(data):
 
     print("예상 매출액 : ", int(np.mean(result)))
 
-    # print(df)
-
     return int(np.mean(result))
 
 # 모델 불러오기
