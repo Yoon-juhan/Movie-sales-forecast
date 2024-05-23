@@ -87,10 +87,11 @@ async def savePredict(
     director: str = Query(...),
     actor: str = Query(...),
     distributor: str = Query(...),
-    result: int = Query(...)
+    result: int = Query(...),
+    audience: int = Query(...)
 ):
 
-    insertPredict(user_id, [movie_name, open_date, nationality, genre, rating, director, actor, distributor, result])
+    insertPredict(user_id, [movie_name, open_date, nationality, genre, rating, director, actor, distributor, result, audience])
 
     return {
         "status":True
@@ -102,3 +103,51 @@ async def getHistory (user_id: str = Query(...)):
     df = selectHistory(user_id)
 
     return df.to_dict(orient="records")
+
+# 박스오피스 조회
+@app.get("/getBoxoffice")
+async def getBoxoffice (year: str = Query(...), sort: str = Query(...)):
+
+    if sort == "순위": sort = "MOVIE_RANK"
+    if sort == "개봉일": sort = "OPEN_DATE desc"
+    if sort == "점유율": sort = "MARKET_SHARE desc"
+    if sort == "관객수": sort = "AUDIENCE desc"
+    if sort == "스크린수": sort = "SCREEN desc"
+    if sort == "상영횟수": sort = "SCREENING desc"
+    if sort == "매출액": sort = "SALES desc"
+
+    df = selectBoxoffice(year, sort)
+
+    return df.to_dict(orient="records")
+
+# 박스오피스 제목 조회
+@app.get("/getBoxofficeTitle")
+async def getBoxoffice (title: str = Query(...)):
+
+    df = selectBoxofficeTitle(title)
+
+    return df.to_dict(orient="records")
+
+# 비밀번호 변경
+@app.get("/changePw")
+async def getBoxoffice (id: str = Query(...), password: str = Query(...)):
+
+    password = changePw(id, password)
+
+    return {"password" : password}
+
+# 닉네임 변경
+@app.get("/changeNickname")
+async def getBoxoffice (id: str = Query(...), nickname: str = Query(...)):
+
+    nickname = changeNickname(id, nickname)
+
+    return {"nickname" : nickname}
+
+# 회원탈퇴
+@app.get("/deleteUser")
+async def getBoxoffice (id: str = Query(...)):
+
+    deleteUser(id)
+
+    return {"sttus" : True}

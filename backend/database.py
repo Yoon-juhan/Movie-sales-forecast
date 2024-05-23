@@ -202,8 +202,8 @@ def insertPredict(user_id, data):
     now = datetime.datetime.now()
     now = str(now.year) + str(now.month).zfill(2) + str(now.day).zfill(2) + str(now.hour).zfill(2)
 
-    sql = f"""insert into history(history_id, member_id, movie_name, open_date, nationality, genre, rating, director, actor, distributor, predicted_value)
-              values({now} || history_sequence.nextval, '{user_id}', '{data[0]}', '{data[1]}', '{data[2]}', '{data[3]}', '{data[4]}', '{data[5]}', '{data[6]}', '{data[7]}', {data[8]})"""
+    sql = f"""insert into history(history_id, member_id, movie_name, open_date, nationality, genre, rating, director, actor, distributor, predicted_value, audience)
+              values({now} || history_sequence.nextval, '{user_id}', '{data[0]}', '{data[1]}', '{data[2]}', '{data[3]}', '{data[4]}', '{data[5]}', '{data[6]}', '{data[7]}', {data[8]}, {data[9]})"""
     
     cur = conn.cursor()
     cur.execute(sql)
@@ -220,14 +220,99 @@ def selectHistory(user_id):
 
     sql = f"""select * from history
               where member_id = '{user_id}'
-              order by to_number(history_id)"""
+              order by to_number(history_id) desc"""
     
     cur = conn.cursor()
     cur.execute(sql)
     
     df = pd.read_sql(sql, con = conn)
-    print(df)
+
     cur.close()
     conn.close()
 
     return df
+
+# 박스오피스 데이터 조회
+def selectBoxoffice(year, sort):
+    conn = cx.connect(id, pw, url)
+
+    sql = f"""select * from boxoffice_data
+                where open_date like '{year}%'
+                order by {sort}"""
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+    
+    df = pd.read_sql(sql, con = conn)
+
+    cur.close()
+    conn.close()
+
+    return df
+
+# 박스오피스 제목 조회
+def selectBoxofficeTitle(title):
+    conn = cx.connect(id, pw, url)
+
+    sql = f"""select * from boxoffice_data
+              where movie_name like '%{title}%'"""
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+    
+    df = pd.read_sql(sql, con = conn)
+
+    cur.close()
+    conn.close()
+
+    return df
+
+# 비밀번호 변경
+def changePw(user_id, password):
+    conn = cx.connect(id, pw, url)
+
+    sql = f"""update member
+              set member_pw = '{password}'
+              where member_id = '{user_id}'"""
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return password
+
+# 닉네임 변경
+def changeNickname(user_id, nickname):
+    conn = cx.connect(id, pw, url)
+
+    sql = f"""update member
+              set nickname = '{nickname}'
+              where member_id = '{user_id}'"""
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return nickname
+
+# 회원 탈퇴
+def deleteUser(user_id):
+    conn = cx.connect(id, pw, url)
+
+    sql = f"""delete from member
+              where member_id = '{user_id}'"""
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return

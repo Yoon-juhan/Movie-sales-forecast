@@ -4,16 +4,21 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Table from 'react-bootstrap/Table';
 import Pagination from 'react-bootstrap/Pagination'
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Swal from 'sweetalert2'
 
 import axios from "axios";
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 function MyPage() {
+    let navi = useNavigate()
 
     const id = sessionStorage.getItem("id");
     const pw = sessionStorage.getItem("pw");
-    const nickname = sessionStorage.getItem("nickname");
+    const nick = sessionStorage.getItem("nickname");
 
     const [history, setHistory] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +33,49 @@ function MyPage() {
             .then((res) => {
                 console.log(res.data);
                 setHistory(res.data);
+            })
+    }
+
+    // 비밀번호 변경
+    async function changePw(id, password) {
+        let url = `${process.env.REACT_APP_SERVER_URL}/changePw`
+        await axios.get(url, {
+            params : {id, password}
+        })
+            .then((res) => {
+                setPassword(res.data.password);
+                Swal.fire("변경완료", "", "success")
+            })
+    }
+
+    // 닉네임 변경
+    async function changeNickname(id, nickname) {
+        let url = `${process.env.REACT_APP_SERVER_URL}/changeNickname`
+        await axios.get(url, {
+            params : {id, nickname}
+        })
+            .then((res) => {
+                setNickname(res.data.nickname);
+                Swal.fire("변경완료", "", "success")
+            })
+    }
+
+    //로그아웃
+    const logout = () => {
+        sessionStorage.clear();
+        navi("/")
+    }
+
+    // 회원탈퇴
+    async function deleteUser(id) {
+        let url = `${process.env.REACT_APP_SERVER_URL}/deleteUser`
+        await axios.get(url, {
+            params : {id}
+        })
+            .then((res) => {
+                sessionStorage.clear();
+                Swal.fire("탈퇴완료", "", "success")
+                navi("/")
             })
     }
     
@@ -48,6 +96,18 @@ function MyPage() {
      for (let i = 1; i <= Math.ceil(history.length / itemsPerPage); i++) {
          pageNumbers.push(i);
      }
+
+
+
+     const [show, setShow] = useState(false);
+     const [password, setPassword] = useState(pw);
+     const handleClose = () => setShow(false);
+     const handleShow = () => setShow(true);
+
+     const [show2, setShow2] = useState(false);
+     const [nickname, setNickname] = useState(nick);
+     const handleClose2 = () => setShow2(false);
+     const handleShow2 = () => setShow2(true);
 
     return (
 
@@ -72,11 +132,55 @@ function MyPage() {
                         </tr>
                         <tr>
                             <td>비밀번호</td>
-                            <td><input type="password" id='myPageInput' value={pw} readOnly/></td>
+                            <td><input type="password" id='myPageInput' value={password} readOnly/></td>
+                            <td>
+                                <Button variant='secondary' onClick={handleShow}><b>변경</b></Button>
+                                <Modal show={show} onHide={handleClose}>
+                                    <Modal.Header closeButton >
+                                    <Modal.Title>비밀번호 변경</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body className='modalStyle'>
+                                        <input type="password" className='modalInput' onChange={e => setPassword(e.target.value)}/>
+                                        &nbsp;&nbsp;
+                                        <Button variant="dark" onClick={()=>changePw(id, password)}>
+                                            변경
+                                        </Button>
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                    <Button variant="dark" onClick={handleClose}>
+                                        닫기
+                                    </Button>
+                                    </Modal.Footer>
+                                </Modal>
+                            </td>
                         </tr>
                         <tr>
                             <td>닉네임</td>
                             <td><input type="text" id='myPageInput' value={nickname} readOnly/></td>
+                            <td>
+                                <Button variant='secondary' onClick={handleShow2}><b>변경</b></Button>
+                                    <Modal show={show2} onHide={handleClose2}>
+                                        <Modal.Header closeButton >
+                                        <Modal.Title>닉네임 변경</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body className='modalStyle'>
+                                            <input type="text" className='modalInput' onChange={e => setNickname(e.target.value)}/>
+                                            &nbsp;&nbsp;
+                                            <Button variant="dark" onClick={()=>changeNickname(id, nickname)}>
+                                                변경
+                                            </Button>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                        <Button variant="dark" onClick={handleClose2}>
+                                            닫기
+                                        </Button>
+                                        </Modal.Footer>
+                                    </Modal>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><Button variant='success' onClick={logout}><b>로그아웃</b></Button></td>
+                            <td><Button variant='danger' onClick={()=>deleteUser(id)}><b>회원탈퇴</b></Button></td>
                         </tr>
                     </table>
                     <hr />
@@ -94,6 +198,7 @@ function MyPage() {
                                 <th>배우</th>
                                 <th>배급사</th>
                                 <th>매출액</th>
+                                <th>관객수</th>
                             </tr>
                         </thead>
                         <tbody>                        
@@ -109,18 +214,21 @@ function MyPage() {
                                     <td>{movie.ACTOR.split(',').slice(0,3).join(',')}</td>
                                     <td>{movie.DISTRIBUTOR}</td>
                                     <td>{parseInt(movie.PREDICTED_VALUE).toLocaleString()}원</td>
+                                    <td>{movie.AUDIENCE}명</td>
                                     </tr>
                             ))
                             }
                         </tbody>
                     </Table>
-                    <Pagination>
-                        {pageNumbers.map(number => (
-                            <Pagination.Item key={number} active={number === currentPage} onClick={() => paginate(number)}>
-                                {number}
-                            </Pagination.Item>
-                        ))}
-                    </Pagination>
+                    <div className="d-flex justify-content-center">
+                        <Pagination>
+                            {pageNumbers.map(number => (
+                                <Pagination.Item className='pagination' key={number} active={number === currentPage} onClick={() => paginate(number)}>
+                                    {number}
+                                </Pagination.Item>
+                            ))}
+                        </Pagination>
+                    </div>
                 </div>
             </header>
         </div>

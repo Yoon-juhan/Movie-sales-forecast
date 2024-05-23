@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import Table from 'react-bootstrap/Table';
-
+import Swal from 'sweetalert2'
 import Button from 'react-bootstrap/Button';
 
 function Predict() {
@@ -19,6 +19,7 @@ function Predict() {
     var director = sessionStorage.getItem("director");
     var actor = sessionStorage.getItem("actor");
     var distributor = sessionStorage.getItem("distributor");
+    var audience = parseInt(result / 12000);
 
     const [similar, setSimilar] = useState([]);
 
@@ -48,10 +49,11 @@ function Predict() {
     async function savePredict() {
         let url = `${process.env.REACT_APP_SERVER_URL}/savePredict`
         await axios.get(url, {
-            params : {user_id, movie_name, open_date, nationality, genre, rating, director, actor, distributor, result}
+            params : {user_id, movie_name, open_date, nationality, genre, rating, director, actor, distributor, result, audience}
         })
             .then((res) => {
                 console.log(res.data);
+                Swal.fire("저장완료", "", "success")
             })
     }
 
@@ -97,9 +99,10 @@ function Predict() {
                                 <th>배우</th>
                                 <th>배급사</th>
                                 <th>매출액</th>
+                                <th>관객수</th>
                             </tr>
                         </thead>
-                        <tbody>                        
+                        <tbody>
                             <tr>
                                 <td>{movie_name}</td>
                                 <td>{open_date}</td>
@@ -110,6 +113,7 @@ function Predict() {
                                 <td>{actor}</td>
                                 <td>{distributor}</td>
                                 <td>{formatted_result}원</td>
+                                <td>{audience}명</td>
                             </tr>
                         </tbody>
                        
@@ -131,6 +135,7 @@ function Predict() {
                                 <th>배우</th>
                                 <th>배급사</th>
                                 <th>매출액</th>
+                                <th>관객수</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,6 +151,7 @@ function Predict() {
                                 <td>{movie.ACTOR.split(',').slice(0,3).join(',')}</td>
                                 <td>{movie.DISTRIBUTOR}</td>
                                 <td>{parseInt(movie.SALES).toLocaleString()}원</td>
+                                <td>{movie.AUDIENCE}명</td>
                                 </tr>
                         ))
                         }

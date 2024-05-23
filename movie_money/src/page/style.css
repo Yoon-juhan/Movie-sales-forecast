@@ -158,6 +158,18 @@ input {
     width: 200px;
 }
 
-.pagination {
-    align-content: center;
+.page-link {
+    background-color: rgb(226, 0, 0);
+    color: white;
+}
+
+.boxoffice_box {
+    width: 97%;
+    height: 75vh;
+    overflow: scroll;
+}
+
+.boxoffice_title {
+    margin-top: -50px;
+    color: white;
 }
