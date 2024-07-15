@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/63cba388-eaf8-4759-8434-e6975e7e2326)![image](https://github.com/user-attachments/assets/b64fa641-de7f-45f2-a2fc-e619af9d84de)# 🎬 영화 매출액 예측 프로젝트
+# 🎬 영화 매출액 예측 프로젝트
 
 ## 프로젝트 개요
 
